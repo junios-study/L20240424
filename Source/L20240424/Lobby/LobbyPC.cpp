@@ -16,14 +16,18 @@ void ALobbyPC::C2S_SendMessage_Implementation(FText const& Text)
 		ALobbyPC* PC = Cast<ALobbyPC>(*Iter);
 		if (PC)
 		{
-			PC->C2S_SendMessage(Text);
+			PC->S2C_SendMessage(Text);
 		}
 	}
 }
 
 void ALobbyPC::S2C_SendMessage_Implementation(FText const& Text)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Reiceve %s"), *Text.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Reiceve %s"), *Text.ToString());
+	if (LobbeyWidget)
+	{
+		LobbeyWidget->AddMessage(Text);
+	}
 }
 
 void ALobbyPC::BeginPlay()
@@ -42,6 +46,10 @@ void ALobbyPC::BeginPlay()
 		{
 			LobbeyWidget = CreateWidget<ULobbyWidgetBase>(this, WidgetClass);
 			LobbeyWidget->AddToViewport();
+			if (HasAuthority())
+			{
+				LobbeyWidget->ShowStartButton();
+			}
 
 			SetInputMode(FInputModeUIOnly());
 			bShowMouseCursor = true;

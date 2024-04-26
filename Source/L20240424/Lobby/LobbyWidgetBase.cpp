@@ -39,16 +39,42 @@ void ULobbyWidgetBase::OnCommitText(const FText& Text, ETextCommit::Type CommitM
 			if (PC)
 			{
 				PC->C2S_SendMessage(Text);
+				InputBox->SetText(FText::FromString(TEXT("")));
 			}
 		}
 		break;
 
-	case ETextCommit::OnUserMovedFocus:
+		case ETextCommit::OnCleared:
+		{
+			InputBox->SetUserFocus(GetOwningPlayer());
+		}
 		break;
-
 	}
 }
 
 void ULobbyWidgetBase::OnStartButton()
 {
+}
+
+void ULobbyWidgetBase::AddMessage(const FText& Text)
+{
+	TObjectPtr<UTextBlock> NewMessage = NewObject<UTextBlock>(ChatBox);
+	if (NewMessage)
+	{
+		NewMessage->SetText(Text);
+		FSlateFontInfo FontInfo = NewMessage->GetFont();
+		FontInfo.Size = 18;
+		NewMessage->SetFont(FontInfo);
+
+		ChatBox->AddChild(NewMessage);
+		ChatBox->ScrollToEnd();
+	}
+}
+
+void ULobbyWidgetBase::ShowStartButton()
+{
+	if (StartButton)
+	{
+		StartButton->SetVisibility(ESlateVisibility::Visible);
+	}
 }

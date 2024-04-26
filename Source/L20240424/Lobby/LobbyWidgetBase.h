@@ -33,4 +33,8 @@ public:
 
 	UFUNCTION()
 	void OnStartButton();
+
+	void AddMessage(const FText& Text);
+
+	void ShowStartButton();
 };
