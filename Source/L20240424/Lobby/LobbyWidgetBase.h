@@ -13,5 +13,24 @@ UCLASS()
 class L20240424_API ULobbyWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
-	
+public:
+	virtual void NativeConstruct() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Control")
+	TObjectPtr<class UButton> StartButton;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Control")
+	TObjectPtr<class UScrollBox> ChatBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Control")
+	TObjectPtr<class UTextBlock> LeftTime;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Control")
+	TObjectPtr<class UEditableTextBox> InputBox;
+
+	UFUNCTION()
+	void OnCommitText(const FText& Text, ETextCommit::Type CommitMethod);
+
+	UFUNCTION()
+	void OnStartButton();
 };
