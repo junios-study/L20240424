@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "LobbyWidgetBase.h"
@@ -9,6 +9,7 @@
 #include "LobbyPC.h"
 #include "Kismet/GameplayStatics.h"
 #include "../MyGameInstance.h"
+#include "LobbyGM.h"
 
 
 void ULobbyWidgetBase::NativeConstruct()
@@ -59,6 +60,11 @@ void ULobbyWidgetBase::OnCommitText(const FText& Text, ETextCommit::Type CommitM
 
 void ULobbyWidgetBase::OnStartButton()
 {
+	ALobbyGM* GM = Cast<ALobbyGM>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GM)
+	{
+		GM->StartGame();
+	}
 }
 
 void ULobbyWidgetBase::AddMessage(const FText& Text)
@@ -82,4 +88,10 @@ void ULobbyWidgetBase::ShowStartButton()
 	{
 		StartButton->SetVisibility(ESlateVisibility::Visible);
 	}
+}
+
+void ULobbyWidgetBase::UpdateLeftTime(int32 NewLeftTime)
+{
+	FString Temp = FString::Printf(TEXT("%d초 남았습니다."), NewLeftTime);
+	LeftTime->SetText(FText::FromString(Temp));
 }

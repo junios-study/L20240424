@@ -37,4 +37,6 @@ public:
 	void AddMessage(const FText& Text);
 
 	void ShowStartButton();
+
+	void UpdateLeftTime(int32 NewLeftTime);
 };

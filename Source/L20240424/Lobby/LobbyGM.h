@@ -20,4 +20,13 @@ public:
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
+	virtual void BeginPlay() override;
+
+	FTimerHandle LobbyTimer;
+
+	UFUNCTION()
+	void DecreaseTime();
+
+	void StartGame();
+
 };
