@@ -47,7 +47,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* JumpAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputAction* FireAction;
+
 	void Look(const FInputActionValue& Value);
 
 	void Move(const FInputActionValue& Value);
+
+	void Fire(const FInputActionValue& Value);
+
 };
+
+

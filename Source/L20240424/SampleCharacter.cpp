@@ -58,6 +58,9 @@ void ASampleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		UIC->BindAction(JumpAction, ETriggerEvent::Triggered, this,
 			&ASampleCharacter::Jump);
+
+		UIC->BindAction(FireAction, ETriggerEvent::Triggered, this,
+			&ASampleCharacter::Fire);
 	}
 
 
@@ -84,5 +87,51 @@ void ASampleCharacter::Move(const FInputActionValue& Value)
 
 	AddMovementInput(ForwordVector, Data.Y);
 	AddMovementInput(RightVector, Data.X);
+}
+
+void ASampleCharacter::Fire(const FInputActionValue& Value)
+{
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (PC)
+	{
+		int32 ScreenX;
+		int32 ScreenY;
+		
+		FVector CrosshairWorldPosition;
+		FVector CrosshairWorldDirection;
+
+		PC->GetViewportSize(ScreenX, ScreenY);
+
+		PC->DeprojectScreenPositionToWorld(ScreenX / 2, ScreenY / 2,
+			CrosshairWorldPosition, CrosshairWorldDirection);
+
+		FVector StartPosition = CrosshairWorldPosition;
+		FVector EndPosition = CrosshairWorldPosition + (CrosshairWorldDirection * 100000);
+
+		TArray<TEnumAsByte<EObjectTypeQuery>> Objects;
+
+		Objects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
+		Objects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic));
+		Objects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody));
+		//Objects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+
+		TArray<AActor*> IgnoreActors;
+		IgnoreActors.Add(this);
+
+		FHitResult OutHit;
+		bool Result = UKismetSystemLibrary::LineTraceSingleForObjects(
+			GetWorld(),
+			StartPosition,
+			EndPosition,
+			Objects,
+			true,
+			IgnoreActors,
+			EDrawDebugTrace::ForDuration,
+			OutHit,
+			true,
+			FLinearColor::Red,
+			FLinearColor::Green,
+			5.0f);
+	}
 }
 
