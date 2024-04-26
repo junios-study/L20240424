@@ -7,6 +7,8 @@
 #include "Components/EditableTextBox.h"
 #include "Components/ScrollBox.h"
 #include "LobbyPC.h"
+#include "Kismet/GameplayStatics.h"
+#include "../MyGameInstance.h"
 
 
 void ULobbyWidgetBase::NativeConstruct()
@@ -35,10 +37,13 @@ void ULobbyWidgetBase::OnCommitText(const FText& Text, ETextCommit::Type CommitM
 	{
 		case ETextCommit::OnEnter:
 		{
+			UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
 			ALobbyPC* PC = GetOwningPlayer<ALobbyPC>();
-			if (PC)
+			if (PC && GI)
 			{
-				PC->C2S_SendMessage(Text);
+				FString Temp = FString::Printf(TEXT("%s : %s"), *GI->Name, *Text.ToString());
+				PC->C2S_SendMessage(FText::FromString(Temp));
 				InputBox->SetText(FText::FromString(TEXT("")));
 			}
 		}
